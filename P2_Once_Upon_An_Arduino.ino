@@ -5,6 +5,15 @@ Servo myservo2;
 Servo myservo3;
 Servo myservo4;
 
+const int ledPin1 = 11;
+const int ledPin2 = 12;
+const int ledPin3 = 13;
+
+unsigned long currentTime;
+unsigned long previousTime = 0;
+int timerLength = 100;
+bool ledOn = false;
+
 const int buttonAPin = 2;
 int buttonAState = 0;
 int lastButtonAState = 0;
@@ -35,6 +44,9 @@ void setup() {
   myservo2.attach(10);
   myservo3.attach(11);
   myservo4.attach(12);
+  pinMode(ledPin1, OUTPUT);
+  pinMode(ledPin2, OUTPUT);
+  pinMode(ledPin3, OUTPUT);
   pinMode(buttonAPin, INPUT);
   pinMode(buttonBPin, INPUT);
   pinMode(buttonCPin, INPUT);
@@ -44,29 +56,52 @@ void setup() {
 }
 
 void loop() {
+  currentTime = millis();
+
   buttonAState = digitalRead(buttonAPin);
 
-  if (buttonAState != lastButtonAState) {
+  if (buttonAState != lastButtonAState && A == false) {
     if (buttonAState == HIGH) {
+      if (currentTime - previousTime > timerLength) {
+        ledOn = !ledOn;
+        previousTime = currentTime;
+      }
+
+      if (ledOn) {
+        digitalWrite(ledPin1, HIGH);
+        digitalWrite(ledPin2, HIGH);
+        digitalWrite(ledPin3, HIGH);
+      } else {
+        digitalWrite(ledPin1, LOW);
+        digitalWrite(ledPin2, LOW);
+        digitalWrite(ledPin3, LOW);
+      }
       A = true;
     }
   }
 
   if (A == true) {
     buttonBState = digitalRead(buttonBPin);
-    if (buttonBState != lastButtonBState) {
+    if (buttonBState != lastButtonBState && B == false) {
       if (buttonBState == HIGH) {
-        myservo1.write(180);
+        myservo1.write(360);
+        servo1Active = true;
+        servo1StartTime = currentTime;
         B = true;
       }
     }
   }
 
+  if (servo1Active && (currentTime - servo1StartTime >= 2000)) {
+    myservo1.write(90);
+    servo1Active = false;
+  }
+
   if (B == true) {
     buttonCState = digitalRead(buttonCPin);
-    if (buttonCState != lastButtonCState) {
+    if (buttonCState != lastButtonCState && C == false) {
       if (buttonCState == HIGH) {
-        myservo2.write(90);
+        myservo2.write(180);
         C = true;
       }
     }
@@ -74,19 +109,26 @@ void loop() {
 
   if (C == true) {
     buttonDState = digitalRead(buttonDPin);
-    if (buttonDState != lastButtonDState) {
+    if (buttonDState != lastButtonDState && D == false) {
       if (buttonDState == HIGH) {
-        myservo3.write(180);
+        myservo3.write(360);
+        servo3Active = true;
+        servo3StartTime = currentTime;
         D = true;
       }
     }
   }
 
+  if (servo3Active && (currentTime - servo3StartTime >= 2000)) {
+    myservo3.write(90);
+    servo3Active = false;
+  }
+
   if (D == true) {
     buttonEState = digitalRead(buttonEPin);
-    if (buttonEState != lastButtonEState) {
+    if (buttonEState != lastButtonEState && E == false) {
       if (buttonEState == HIGH) {
-        myservo4.write(90);
+        myservo4.write(180);
         E = true;
       }
     }
