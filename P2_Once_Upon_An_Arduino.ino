@@ -39,11 +39,25 @@ int buttonEState = 0;
 int lastButtonEState = 0;
 bool E = false;
 
+unsigned long servo1StartTime = 0;
+unsigned long servo3StartTime = 0;
+bool servo1Active = false;
+bool servo3Active = false;
+
 void setup() {
-  myservo1.attach(9);
-  myservo2.attach(10);
-  myservo3.attach(11);
-  myservo4.attach(12);
+  myservo1.attach(7);
+  myservo2.attach(8);
+  myservo3.attach(9);
+  myservo4.attach(10);
+
+  myservo1.write(360);
+  servo1Active = true;
+  servo1StartTime = millis();
+
+  myservo3.write(360);
+  servo3Active = true;
+  servo3StartTime = millis();
+
   pinMode(ledPin1, OUTPUT);
   pinMode(ledPin2, OUTPUT);
   pinMode(ledPin3, OUTPUT);
@@ -52,6 +66,7 @@ void setup() {
   pinMode(buttonCPin, INPUT);
   pinMode(buttonDPin, INPUT);
   pinMode(buttonEPin, INPUT);
+
   Serial.begin(9600);
 }
 
@@ -92,7 +107,7 @@ void loop() {
     }
   }
 
-  if (servo1Active && (currentTime - servo1StartTime >= 2000)) {
+  if (servo1Active && (currentTime - servo1StartTime >= 333)) {
     myservo1.write(90);
     servo1Active = false;
   }
@@ -119,7 +134,7 @@ void loop() {
     }
   }
 
-  if (servo3Active && (currentTime - servo3StartTime >= 2000)) {
+  if (servo3Active && (currentTime - servo3StartTime >= 333)) {
     myservo3.write(90);
     servo3Active = false;
   }
