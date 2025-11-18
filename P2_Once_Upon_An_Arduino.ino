@@ -10,12 +10,12 @@ Servo myservo4;
 //LED pin assignments
 const int ledPin1 = 11;
 const int ledPin2 = 12;
-const int ledPin3 = 13;
 
 //timing variables for LED toggling
 unsigned long currentTime;
 unsigned long previousTime = 0;
 int timerLength = 100;
+bool systemOn = false;
 bool ledOn = false;
 
 //button A variables
@@ -74,7 +74,6 @@ void setup() {
   //set LED pins as outputs
   pinMode(ledPin1, OUTPUT);
   pinMode(ledPin2, OUTPUT);
-  pinMode(ledPin3, OUTPUT);
 
   //set button pins as inputs
   pinMode(buttonAPin, INPUT);
@@ -96,23 +95,26 @@ void loop() {
 
   if (buttonAState != lastButtonAState && A == false) {
     if (buttonAState == HIGH) {
-      //basic toggling timer
-      if (currentTime - previousTime > timerLength) {
-        ledOn = !ledOn;
-        previousTime = currentTime;
-      }
-
-      //update LED outputs
-      if (ledOn) {
-        digitalWrite(ledPin1, HIGH);
-        digitalWrite(ledPin2, HIGH);
-        digitalWrite(ledPin3, HIGH);
-      } else {
-        digitalWrite(ledPin1, LOW);
-        digitalWrite(ledPin2, LOW);
-        digitalWrite(ledPin3, LOW);
-      }
+      systemOn = true;
       A = true;
+    }
+  }
+
+  //if LED system is active, blink LEDs at the preset interval
+  if (systemOn == true) {
+    //basic toggling timer
+    if (currentTime - previousTime > timerLength) {
+      ledOn = !ledOn;
+      previousTime = currentTime;
+    }
+
+    //update LED outputs
+    if (ledOn) {
+      digitalWrite(ledPin1, HIGH);
+      digitalWrite(ledPin2, HIGH);
+    } else {
+      digitalWrite(ledPin1, LOW);
+      digitalWrite(ledPin2, LOW);
     }
   }
 
