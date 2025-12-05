@@ -1,3 +1,11 @@
+/*
+Raiders of the Lost Ark
+
+Team Name: Team TNT
+Team Members: Noah Rutledge and Theo Chau
+Description: In this program, there are five interactions that tell the story of Raiders of the Lost Ark.
+*/
+
 //include the servo library
 #include <Servo.h>
 
